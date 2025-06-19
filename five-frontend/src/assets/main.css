@@ -1,0 +1,62 @@
+/* src/assets/main.css */
+
+/* 1. 구글 웹폰트 'Gowun Dodum' 불러오기 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+/* 기본 폰트 및 색상 변수 설정 */
+:root {
+  --main-pink: #f8bbd0; /* 약간 톤 다운된 핑크 */
+  --point-coral: #f08080;
+  --text-dark: #333;
+  --text-light: #555;
+  --bg-light: #fff5f8; /* 핑크빛이 도는 배경 */
+}
+
+/* 모든 요소에 부드러운 박스 크기 계산 적용 */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 2. 불러온 폰트를 body에 적용 */
+body {
+  margin: 0;
+  font-family: 'Gowun Dodum', sans-serif; /* 기본 폰트 변경 */
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* 앱 전체를 감싸는 컨테이너 스타일 */
+#app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  box-shadow: 0 0 30px rgba(0,0,0,0.07);
+}
+
+/* 각 섹션의 공통 스타일 */
+section {
+  padding: 80px 40px; /* 패딩을 좀 더 넉넉하게 */
+  border-bottom: 1px solid #eee;
+  overflow: hidden; /* 애니메이션 요소가 넘치는 것 방지 */
+}
+
+/* 각 섹션의 공통 제목 스타일 */
+.section-title {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--point-coral);
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+
+/* 3. 스크롤 애니메이션을 위한 CSS 클래스 추가 */
+.fade-in-element {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-element.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
