@@ -1,8 +1,8 @@
 <template>
   <FallingPetals />
-  
+
   <div v-if="currentScreen === 'entry'" class="entry-gate">
-  <div class="entry-box">
+    <div class="entry-box">
       <p class="days-passed">
         우리가 사랑한지 <span class="day-number">{{ daysPassed }}</span>일째
       </p>
@@ -11,11 +11,12 @@
         <span>{{ timeRemaining.days }}</span>일
         <span>{{ timeRemaining.hours }}</span>시간
         <span>{{ timeRemaining.minutes }}</span>분
-        <span>{{ timeRemaining.seconds }}</span>초 후 우리의 500일
+        <span>{{ timeRemaining.seconds }}</span>초 후
+        <br>
+        우리 500일
       </div>
 
-
-      <h2>우리의 코드를 입력해줘</h2>
+      <h2>코드를 입력해 주세요</h2>
       <input v-model="inputCode" @keyup.enter="checkCode" type="password" placeholder="******" maxlength="6" autofocus>
       <button @click="checkCode">입장하기</button>
       <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -24,23 +25,21 @@
 
   <div v-else-if="currentScreen === 'messages'" class="welcome-gate" @click="nextMessage">
     <Transition name="fade" mode="out-in">
-      <p class="welcome-text" :key="currentMessageIndex">
-        {{ messages[currentMessageIndex] }}
-      </p>
+      <p class="welcome-text" :key="currentMessageIndex" v-html="messages[currentMessageIndex]"></p>
     </Transition>
     <div class="continue-prompt">(화면을 클릭하면 계속됩니다)</div>
   </div>
-  
+
   <div v-else-if="currentScreen === 'main'" id="app-container">
     <IntroSection />
     <main>
       <TimelineSection />
       <GallerySection />
       <LoveReasonSection />
-      <QuizSection />
-      <LetterSection />
       <PromiseVault />
-      <CouponSection />
+      <!-- <QuizSection /> -->
+      <LetterSection />
+      <!-- <CouponSection /> -->
     </main>
     <footer>
       <p>앞으로 1000일, 10000일도 함께하자, 은서야. 사랑해 ❤️</p>
@@ -62,18 +61,20 @@ import PromiseVault from './components/PromiseVault.vue';
 import CouponSection from './components/CouponSection.vue';
 
 // --- 상태 관리 ---
-const currentScreen = ref('entry'); 
+const currentScreen = ref('entry');
 const inputCode = ref('');
 const errorMessage = ref('');
 
 // --- 순차 메시지 로직 ---
 const messages = ref([
-  "안녕 여보? 갑자기 이렇게 화면이 나와서 놀랬지?",
-  "우리 만난지 벌써 500일이나 됐는데 내가 해줄 수 있는게 뭐가 있을까 생각해봤어.",
-  "비록 지금 내가 멋진 선물은 못해줘도 어떻게 하면 내 정성을 보여줄 수 있을까 생각해보다가,",
-  "자기를 위한 하나밖에 없는 우리만의 공간을 만들었어.",
-  "우리 500일을 기념하면서, 시간 날때마다 밤새워가며 열심히 만들었으니까 예쁘게 봐줘.",
-  "자, 그럼 시작할게!"
+  "안녕 여보?",
+  "오늘 우리 만난지 500일 되는 날이야.",
+  "지금 내가 멋진 선물은 못해줘도 <br>어떻게 하면 내 마음을 전할 수 있을까 고민하다가",
+  "그나마 잘 할 수 있는걸로 준비해봤어",
+  "여보를 위한 하나밖에 없는 공간이니까",
+  "예쁘게 봐줬으면 해 <br>항상 고맙고, 많이 사랑해.",
+  "그럼 시작할게!"
+
 ]);
 const currentMessageIndex = ref(0);
 
@@ -82,7 +83,7 @@ const checkCode = () => {
   if (inputCode.value === '240208') {
     currentScreen.value = 'messages';
   } else {
-    errorMessage.value = '코드가 일치하지 않아요. 다시 확인해줘! 😉';
+    errorMessage.value = '내가 볶음밥 해준다고 한 날 🍳';
     inputCode.value = '';
     setTimeout(() => { errorMessage.value = ''; }, 2000);
   }
@@ -105,11 +106,10 @@ let intervalId;
 
 const updateCounters = () => {
   const now = new Date();
-  
+
   // D-Day 카운트다운 계산
   const difference = D_DAY - now;
   if (difference > 0) {
-    // 👇 이 부분이 이전 코드에서 생략되어 있었습니다.
     timeRemaining.value = {
       days: Math.floor(difference / (1000 * 60 * 60 * 24)),
       hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
@@ -117,7 +117,6 @@ const updateCounters = () => {
       seconds: Math.floor((difference / 1000) % 60)
     };
   } else {
-    // 👇 이 부분도 생략되어 있었습니다.
     timeRemaining.value = { days: 0, hours: 0, minutes: 0, seconds: 0 };
     clearInterval(intervalId);
   }
@@ -155,8 +154,18 @@ onUnmounted(() => {
 .countdown span { font-size: 1.6rem; color: var(--point-coral); font-weight: bold; }
 
 /* 환영 메시지 스타일 */
-.welcome-gate { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--bg-light); padding: 20px; cursor: pointer; }
-.welcome-text { font-size: 1.8rem; color: var(--text-dark); text-align: center; line-height: 1.6; max-width: 600px; }
+.welcome-gate { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: var(--bg-light); padding: 20px; cursor: pointer; box-sizing: border-box; }
+
+/* ❗️ [수정] 텍스트 영역이 화면 너비에 맞게 유동적으로 변하도록 수정 */
+.welcome-text {
+  font-size: 1.8rem;
+  color: var(--text-dark);
+  text-align: center;
+  line-height: 1.6;
+  width: 90%; /* 화면 너비의 90%를 사용 */
+  max-width: 800px; /* PC 등 큰 화면에서는 최대 800px을 넘지 않도록 하여 가독성 유지 */
+}
+
 .continue-prompt { position: absolute; bottom: 40px; color: #aaa; font-size: 1rem; animation: blink 1.5s infinite ease-in-out; }
 @keyframes blink { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
