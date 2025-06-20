@@ -27,7 +27,7 @@
     <Transition name="fade" mode="out-in">
       <p class="welcome-text" :key="currentMessageIndex" v-html="messages[currentMessageIndex]"></p>
     </Transition>
-    <div class="continue-prompt">(화면을 클릭하면 계속됩니다)</div>
+    <div class="continue-prompt">(클릭해서 계속하기)</div>
   </div>
 
   <div v-else-if="currentScreen === 'main'" id="app-container">
@@ -188,4 +188,9 @@ footer span { font-size: 0.9rem; opacity: 0.9; }
 .entry-box button { display: block; width: 100%; padding: 15px; margin-top: 20px; border: none; border-radius: 10px; background-color: var(--point-coral); color: white; font-size: 1.2rem; font-family: 'Gowun Dodum', sans-serif; cursor: pointer; transition: background-color 0.2s; }
 .entry-box button:hover { background-color: #d66a6a; }
 .error-message { color: var(--point-coral); margin-top: 15px; height: 20px; }
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 </style>
